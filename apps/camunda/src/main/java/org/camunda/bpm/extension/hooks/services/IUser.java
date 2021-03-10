@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * This class aimed at centralizing all user related information.
@@ -19,6 +20,8 @@ import java.util.Set;
  * @author sumathi.thirumani@aot-technologies.com, yichun.zhao@aot-technologies.com
  */
 public interface IUser {
+	
+	Logger log = Logger.getLogger(IUser.class.getName());
 	
     default String getName(DelegateExecution execution, String userId) {
         User user = execution.getProcessEngine().getIdentityService().createUserQuery().userId(userId).singleResult();
@@ -39,7 +42,9 @@ public interface IUser {
     }
 
     default List<String> getEmailsOfUnassignedTask(DelegateTask delegateTask) {
+		log.info("\n\nInside getEmailsOfUnassignedTask! ");
         Set<IdentityLink> identityLinks = delegateTask.getCandidates();
+		log.info("\n\nInside getEmailsOfUnassignedTask! identityLinks: " identityLinks);
         List<String> emails = new ArrayList<>();
         if(CollectionUtils.isNotEmpty(identityLinks)) {
             for (IdentityLink entry : identityLinks) {
@@ -48,6 +53,8 @@ public interface IUser {
                 }
             }
         }
+		log.info("\n\nInside getEmailsOfUnassignedTask! emails: " emails);
+		log.info("\n\nEnd getEmailsOfUnassignedTask! ");
         return emails;
     }
     
@@ -66,13 +73,17 @@ public interface IUser {
 
     
     default List<String> getEmailsForGroup(DelegateExecution execution,String groupName) {
+		log.info("\n\nInside getEmailsForGroup! ");
         List<User> users =  execution.getProcessEngine().getIdentityService().createUserQuery().memberOfGroup(StringUtils.trim(groupName)).list();
+		log.info("\n\nInside getEmailsForGroup! Users: "users);
         List<String> emails = new ArrayList<>();
         for(User entry : users) {
             if(StringUtils.isNotEmpty(entry.getEmail())) {
                 emails.add(entry.getEmail());
             }
         }
+		log.info("\n\nInside getEmailsForGroup! Emails: "users);
+		log.info("\n\End getEmailsForGroup! ");
         return emails;
     }
 
