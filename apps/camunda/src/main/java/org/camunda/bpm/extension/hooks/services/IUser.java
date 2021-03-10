@@ -83,7 +83,7 @@ public interface IUser {
             }
         }
 		log.info("\n\nInside getEmailsForGroup! Emails: " + users);
-		log.info("\n\End getEmailsForGroup! ");
+		log.info("\n\nEnd getEmailsForGroup! ");
         return emails;
     }
 
